@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#132c35"><meta name="apple-mobile-web-app-capable" content="yes"><title>Five Car Rally</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#18323b;background:#f3f1e9;font-size:16px}*{box-sizing:border-box}body{margin:0}button,input,textarea{font:inherit}button{cursor:pointer;min-height:48px;border:1px solid #cad4d3;border-radius:12px;padding:11px 16px;background:white;color:#18323b;font-weight:700;touch-action:manipulation}button:hover{background:#edf5f2}button:disabled{opacity:.4;cursor:default}button.primary{background:#d8fa70;border-color:#b7d657;color:#16352a}button.dark{background:#18343d;color:white;border:0}button.chosen{outline:3px solid #176e69;outline-offset:2px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:28px;letter-spacing:-1px}h2{font-size:23px}h3{font-size:17px}small,.muted{color:#596d72}.shell{max-width:1440px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px}.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:800;color:#57716e;margin-bottom:5px}.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.panel{background:#fff;border:1px solid #dce0d8;border-radius:20px;padding:22px;box-shadow:0 6px 20px #213e3910}.setup{max-width:780px;margin:28px auto}.setup textarea{width:100%;min-height:240px;border:1px solid #b8c8c5;border-radius:12px;padding:14px;margin:12px 0}.layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:20px;align-items:start}.track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:20px 0}.space{min-height:155px;border:1px solid #d6dcd5;border-radius:12px;background:#f8f8f2;padding:9px;position:relative}.space.star{background:#fff4ca;border-color:#ead48c}.space.hotdog{background:#ffe3d2}.space.finish{background:#d9f49c;border:2px dashed #6c9745}.spacehead{display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-size:22px;color:#5c6c68;font-weight:800}.points{font-size:28px;font-weight:800;margin-top:4px}.cars{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px}.car{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.token{display:inline-flex;align-items:center;justify-content:center;width:30px;height:22px;border-radius:7px 7px 5px 5px;color:white;font-size:11px;font-weight:900;border:1px solid #0003;box-shadow:0 3px 0 #20303a}.bigcar{width:40px;height:28px;font-size:14px;margin-right:6px}.chip{padding:5px 10px;background:#eff2eb;border-radius:20px;font-size:12px;font-weight:750}.cardface{border-radius:17px;background:#18343d;color:white;padding:24px;margin:16px 0;min-height:155px;display:flex;flex-direction:column;justify-content:space-between}.cardface h2{line-height:1.3}.cardface small{color:#c5d9d2}.stack{display:grid;gap:10px}.notice{background:#f2f6eb;padding:13px;border-radius:12px;margin:12px 0;line-height:1.5}.players{display:grid;gap:8px}.player{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf0e9;padding:10px 0;gap:10px}.player.active{background:#f0f7df;border-radius:10px;padding:10px}.name{font-weight:750;overflow-wrap:anywhere}.turn{color:#236d60;font-weight:800}.score{font-size:20px;font-weight:800;text-align:right}.log{font-size:13px;line-height:1.5;max-height:180px;overflow:auto}.log p{padding:8px 0;border-bottom:1px solid #eee;margin:0}details{margin-top:16px}summary{cursor:pointer;padding:10px 0;font-weight:750}label{display:block;font-weight:700;margin:14px 0 4px}.error{color:#b02a30}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{padding:12px 8px;text-align:left;border-bottom:1px solid #e4e9e0}.overflow{overflow-x:auto}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}@media(max-width:1000px){.layout{grid-template-columns:1fr 310px}.shell{padding:16px}.panel{padding:16px}.track{gap:5px}.space{padding:8px;min-height:155px}}@media(min-width:761px) and (max-width:1100px){.layout{grid-template-columns:1fr}.layout>aside{grid-template-columns:1fr 1fr;align-items:start}}@media(max-width:760px){.layout{grid-template-columns:1fr}.top{align-items:flex-start}.track{grid-template-columns:repeat(3,minmax(0,1fr))}.space{min-height:155px}.top h1{font-size:24px}.shell{padding:12px}.panel{border-radius:15px}}
+</style></head><body><main id="app" class="shell"></main>
+<script>
+'use strict';
+const COLORS=['black','red','blue','gray','green'];
+const HEX={black:'#273238',red:'#c93f46',blue:'#2674c5',gray:'#727b85',green:'#23845b'};
+const POINTS=[1,1,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,7];
+const STARS=[4,8,12,14], HOTDOG=6, FINISH=17;
+const CARD_TEXT=`black move 3
+wild +1
+black move 2 swap
+blue go to the next star swap
+green go to red swap
+black move 2 swap
+wild -1
+black move 1
+blue go to gray swap
+blue go to next star
+red go to gray
+blue move 3
+black move 2
+green move 2
+green move 2 swap
+black go to next star
+gray go to black
+gray roll swap
+red move 2
+red go to next star
+red go to next star swap
+blue move 2
+green go to next star swap
+gray move 2 swap
+black roll swap
+wild +1
+gray move 1
+black roll swap
+black go to green
+wild +2
+red go to hotdog stand swap
+red move 2 swap
+gray move 2
+green go to hotdog stand swap
+green move 1
+gray go to green swap
+blue move 1
+gray roll swap
+gray move 2 swap
+gray go to next star swap
+blue go to the hotdog stand swap
+black go to blue swap
+red roll swap
+blue go to red
+blue roll swap
+wild -1
+red roll swap
+green roll swap
+black go to the hotdog stand swap
+red go to black swap
+green roll swap
+wild -2
+wild -2
+blue roll swap
+black go to next star swap
+wild -1
+red move 2 swap
+green move 3
+wild +1
+green move 2 swap
+gray go to the next star
+green go to blue
+gray go to the hotdog stand swap
+red move 3
+red move 1
+blue move 2 swap
+gray move 3
+green go to the next star
+wild +2
+blue move 2 swap`.split('\n');
+function parseCard(text){const t=text.toLowerCase().trim().replace(/grey/g,'gray');const color=t.split(' ')[0];if(![...COLORS,'wild'].includes(color))throw Error('Unknown color: '+text);const swap=t.endsWith(' swap');let action,value;if(t.includes('star'))action='star';else if(t.includes('hotdog'))action='hotdog';else if(t.includes('roll'))action='roll';else if(/go to (black|red|blue|gray|green)/.test(t)){action='color';value=t.match(/go to (black|red|blue|gray|green)/)[1]}else{action='move';const m=t.match(/(?:move )?([+-]?\d+)/);if(!m)throw Error('Unknown card: '+text);value=Number(m[1])}return{text,color,swap,action,value}}
+const DECK=CARD_TEXT.map(parseCard);const KEY='five-car-rally-v1';let state=null,history=[],storageOK=true;
+try{const raw=localStorage.getItem(KEY);if(raw){const saved=JSON.parse(raw);if(saved.version===1&&Array.isArray(saved.players)&&saved.players.length>=1&&saved.players.length<=15)state=saved}}catch(e){storageOK=false}
+const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shuffle(items){let a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function car(c,big=false){return `<span class="token ${big?'bigcar':''}" style="background:${HEX[c]}" aria-label="${c} car">${c==='black'?'BK':c==='blue'?'BL':c==='gray'?'GY':c==='green'?'GN':'R'}</span>`}
+function owners(c){return state.players.filter(p=>p.color===c)}
+function colorCapacity(){return Math.ceil(state.players.length/5)}
+function openSpots(c){return Math.max(0,colorCapacity()-owners(c).length)}
+function availableColors(){return COLORS.filter(c=>c!==state.players[state.turn].color&&openSpots(c)>0)}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){storageOK=false}}
+function checkpoint(){history.push(JSON.stringify(state));if(history.length>60)history.shift()}
+function update(fn){checkpoint();fn();save();render()}
+function log(t){state.log.unshift(t);state.log=state.log.slice(0,80)}
+function startRound(){const capacity=Math.ceil(state.players.length/5),slots=shuffle(COLORS.flatMap(c=>Array(capacity).fill(c)));state.players.forEach((p,i)=>p.color=slots[i]);state.positions=Object.fromEntries(COLORS.map(c=>[c,0]));state.deck=shuffle(DECK.map((_,i)=>i));state.discard=[];state.current=null;state.selected=null;state.phase='draw';state.turn=0;log(`Round ${state.round}: cards shuffled and cars randomly assigned.`)}
+function startGame(){const names=$('#names').value.split('\n').map(s=>s.trim()).filter(Boolean);if(names.length<1||names.length>15){$('#setup-error').textContent='Enter between 1 and 15 names, one per line.';return}state={version:1,players:names.map(name=>({name,color:null,scores:[]})),round:1,log:[]};history=[];startRound();save();render()}
+function draw(){update(()=>{if(!state.deck.length){state.deck=shuffle(state.discard);state.discard=[];log('Deck exhausted: discarded cards shuffled.')}state.current=state.deck.pop();state.selected=null;state.phase='move';log(`${state.players[state.turn].name} drew: ${DECK[state.current].text}.`)})}
+function currentCard(){return DECK[state.current]}
+function destination(c,card,roll){const pos=state.positions[c];switch(card.action){case'move':return Math.max(0,Math.min(FINISH,pos+card.value));case'star':return STARS.find(n=>n>pos)??pos;case'hotdog':return HOTDOG;case'color':return state.positions[card.value];case'roll':return roll==='star'?(STARS.find(n=>n>pos)??pos):Math.max(0,Math.min(FINISH,pos+Number(roll)))}}
+function endRound(){state.players.forEach(p=>p.scores.push(POINTS[state.positions[p.color]]*(state.round===3?2:1)));state.phase='results';log(`Round ${state.round} ended. ${state.round===3?'Double':'Regular'} points awarded to all players.`)}
+function move(roll){if(!state||state.phase!=='move')return;const card=currentCard(),c=card.color==='wild'?state.selected:card.color;if(!c)return;update(()=>{const old=state.positions[c],next=destination(c,card,roll);state.positions[c]=next;log(`${c} car: space ${old+1} → ${next+1}${old===next?' (no movement)':''}.`);if(next>=FINISH){endRound();return}state.phase=card.swap?'swap':'end';if(card.swap&&!availableColors().length)log('No open spot is available on another color.');})}
+function swap(c){if(state.phase!=='swap'||!availableColors().includes(c))return;update(()=>{const p=state.players[state.turn],old=p.color;p.color=c;log(`${p.name} swapped from ${old} to an open spot on the ${c} car.`);state.phase='end'})}
+function nextTurn(){if(!['swap','end'].includes(state.phase))return;update(()=>{state.discard.push(state.current);state.current=null;state.selected=null;state.turn=(state.turn+1)%state.players.length;state.phase='draw'})}
+function nextRound(){if(state.phase!=='results'||state.round>=3)return;update(()=>{state.round++;startRound()})}
+function undo(){if(!history.length)return;state=JSON.parse(history.pop());save();render()}
+function total(p){return p.scores.reduce((a,b)=>a+b,0)}
+function rules(){return `<details><summary>How to play & rules</summary><div class="notice">Enter real dice results using −1, 2, 3, 4, 6, or ★. Draw one card per turn. Move the card’s car even when it belongs to someone else. Wild cards let the active player pick any car.<br><br>There are always five cars. Up to ${state?Math.ceil(state.players.length/5):'1 / 2 / 3'} players may share each color, based on player count. Each round starts with all cars on START and fresh random assignments. Players sharing a car earn the same points.<br><br>★ moves to the next star strictly ahead. With no star ahead, stay put. “Go to [color]” moves to that car’s space, forward or backward. Hotdog cards go to space 7, forward or backward. Cars cannot move behind START.<br><br>After moving a swap card, the active player may change their own assignment to another color with an open claim spot, or skip. Each color has 1 spot for 1–5 players, 2 spots for 6–10 players, or 3 spots for 11–15 players. A swap frees your old spot and claims a spot on the new color. Other players keep their assignments. If a car reaches or passes FINISH, the round ends immediately, before any swap. All five cars can end the round, including unclaimed cars.<br><br>Round 1 and 2 use the printed points; round 3 doubles them. Names stay in the entered turn order. Tied totals share the win.</div></details>`}
+function header(){return `<header class="top"><div><div class="eyebrow">Real dice. Digital racetrack.</div><h1>Five Car Rally <span aria-hidden="true">⚑</span></h1></div><div class="row">${state?`<span class="chip">ROUND ${state.round} / 3 · ${state.round===3?'2× POINTS':'1× POINTS'}</span><button onclick="undo()" ${history.length?'':'disabled'}>Undo</button><button onclick="newGame()">New game</button>`:'<span class="chip">1–15 PLAYERS</span>'}</div></header>`}
+function newGame(){if(confirm('Start a new game? This clears the current race and scores.')){state=null;history=[];try{localStorage.removeItem(KEY)}catch(e){}render()}}
+function track(){const order=[0,1,2,3,4,5,11,10,9,8,7,6,12,13,14,15,16,17];return `<div class="row"><h2 style="margin:0">The racetrack</h2><span class="chip">Follow the space numbers</span></div><p class="muted" style="margin-top:8px">Top row → &nbsp; Middle row ← &nbsp; Bottom row →</p><div class="track">${order.map(n=>`<div class="space ${STARS.includes(n)?'star':''} ${n===HOTDOG?'hotdog':''} ${n===FINISH?'finish':''}"><div class="spacehead"><span>${n+1}${n<FINISH?' '+(n<6?'→':n<12?'←':'→'):''}</span><span>${n===0?'START':n===FINISH?'FINISH':STARS.includes(n)?'★ STAR':n===HOTDOG?'🌭':''}</span></div><div class="points">${POINTS[n]} ${POINTS[n]===1?'pt':'pts'}${state.round===3?` <small>×2</small>`:''}</div><div class="cars">${COLORS.filter(c=>state.positions[c]===n).map(c=>car(c)).join('')}</div></div>`).join('')}</div><div class="row">${COLORS.map(c=>`<span class="chip">${car(c)} ${owners(c).map(p=>esc(p.name)).join(', ')||'Unclaimed'} · ${owners(c).length}/${colorCapacity()} spots claimed</span>`).join('')}</div>`}
+function controls(){const p=state.players[state.turn],card=state.current===null?null:currentCard();let html=`<div class="eyebrow">At the wheel</div><h2>${esc(p.name)}’s turn</h2><div class="row">${car(p.color,true)}<span>Your car: <b>${p.color}</b></span></div><div class="cardface">${card?`<small>CARD ${DECK.length-state.deck.length} / ${DECK.length}</small><h2>${esc(card.text.replace(/^./,c=>c.toUpperCase()))}</h2>`:`<small>${state.deck.length} CARDS IN DECK</small><h2>Ready for the next move?</h2>`}</div>`;
+if(state.phase==='draw')html+='<button class="primary" style="width:100%" onclick="draw()">Draw card →</button>';
+if(state.phase==='move'){if(card.color==='wild'){html+='<p>Choose a car to move:</p><div class="row">'+COLORS.map(c=>`<button class="${state.selected===c?'chosen':''}" aria-pressed="${state.selected===c}" onclick="selectCar('${c}')">${car(c)} ${c}</button>`).join('')+'</div>'}else html+=`<p>Move the <b>${card.color}</b> car.</p>`;if(card.action==='roll')html+='<div class="notice">Roll your real die, then tap the result.</div><div class="row">'+[-1,2,3,4,6,'star'].map(v=>`<button class="primary" onclick="move('${v}')">${v==='star'?'★':v}</button>`).join('')+'</div>';else html+=`<button class="primary" style="width:100%;margin-top:14px" onclick="move()" ${card.color==='wild'&&!state.selected?'disabled':''}>Apply move →</button>`}
+if(state.phase==='swap'){const available=availableColors();html+=`<div class="notice">${available.length?'You may swap to another color with an open spot.':'No open spots on another color. No swap is available.'}</div><div class="stack">${available.map(c=>`<button onclick="swap('${c}')">${car(c)} Switch to ${c} <small>· ${openSpots(c)} open ${openSpots(c)===1?'spot':'spots'} · space ${state.positions[c]+1}</small></button>`).join('')}<button class="dark" onclick="nextTurn()">${available.length?'Keep my car & end turn':'End turn →'}</button></div>`}
+if(state.phase==='end')html+='<div class="notice">Move complete.</div><button class="primary" style="width:100%" onclick="nextTurn()">End turn →</button>';return html}
+function selectCar(c){if(state.phase==='move'&&currentCard().color==='wild'){state.selected=c;save();render()}}
+function results(){const sorted=[...state.players].sort((a,b)=>total(b)-total(a)),final=state.round===3,winners=sorted.filter(p=>total(p)===total(sorted[0]));return `<div class="eyebrow">${final?'Finish line':'Round complete'}</div><h2>${final?'🏁 '+winners.map(p=>esc(p.name)).join(' & ')+(winners.length>1?' win!':' wins!'):'Round '+state.round+' results'}</h2><p class="muted">${final?'All three rounds are complete.':'Every player earned points for their car’s final space.'}</p><div class="overflow"><table><thead><tr><th>Player / car</th><th>R1</th><th>R2</th><th>R3 ×2</th><th>Total</th></tr></thead><tbody>${sorted.map(p=>`<tr><td>${car(p.color)} ${esc(p.name)}</td>${[0,1,2].map(i=>`<td>${p.scores[i]??'—'}</td>`).join('')}<td><b>${total(p)}</b></td></tr>`).join('')}</tbody></table></div>${!final?'<button class="primary" onclick="nextRound()">Start round '+(state.round+1)+' →</button>':'<button class="primary" onclick="newGame()">Play again</button>'}<p class="muted" style="margin-top:12px">Use Undo to correct the last move or round transition.</p>`}
+function render(){let html=header();if(!state){html+=`<section class="panel setup"><div class="eyebrow">Get the crew together</div><h2>Five cars. Three rounds. One rally.</h2><p class="muted">Enter 1–15 player names, one per line. Share this iPad as you take turns.</p><label for="names">Who’s racing?</label><textarea id="names" placeholder="Alex&#10;Sam&#10;Jordan" maxlength="1200" spellcheck="false"></textarea><p id="setup-error" class="error" role="alert"></p><button class="primary" onclick="startGame()">Start the rally →</button><div class="notice">1–5 players: up to 1 per color<br>6–10 players: up to 2 per color<br>11–15 players: up to 3 per color<br><br>Always five cars on the board. All ${DECK.length} cards included.</div>${rules()}</section>`}else{html+=`<div class="layout"><section class="panel">${track()}${rules()}<details><summary>Race log</summary><div class="log">${state.log.map(t=>`<p>${esc(t)}</p>`).join('')}</div></details></section><aside class="stack"><section class="panel" aria-live="polite">${state.phase==='results'?results():controls()}</section>${state.phase!=='results'?`<section class="panel"><h3>Scoreboard</h3><div class="players">${state.players.map((p,i)=>`<div class="player ${i===state.turn?'active':''}"><div><div class="name">${car(p.color)} ${esc(p.name)}</div><small>R1: ${p.scores[0]??'—'} · R2: ${p.scores[1]??'—'} · R3: ${p.scores[2]??'—'}</small></div><div class="score">${total(p)}<small style="display:block;font-size:10px">POINTS</small></div></div>`).join('')}</div></section>`:''}</aside></div>`}html+=`<footer class="muted" style="font-size:12px;margin:18px 0">${storageOK?'Progress saves automatically in this browser on this device.':'Automatic saving is unavailable in this browser. Keep this tab open.'} One shared iPad · Real dice · 70 cards</footer>`;$('#app').innerHTML=html}
+render();
+</script></body></html>
